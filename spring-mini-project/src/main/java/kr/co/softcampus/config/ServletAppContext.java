@@ -1,25 +1,28 @@
 package kr.co.softcampus.config;
 
+import kr.co.softcampus.interceptor.TopMenuInterceptor;
 import kr.co.softcampus.mapper.BoardMapper;
+import kr.co.softcampus.mapper.TopMenuMapper;
+import kr.co.softcampus.service.TopMenuService;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan("kr.co.softcampus.controller")
+@ComponentScan("kr.co.softcampus.service")
+@ComponentScan("kr.co.softcampus.dao")
 @PropertySource(value = "/WEB-INF/properties/db.properties")
 public class ServletAppContext implements WebMvcConfigurer {
 
@@ -35,6 +38,13 @@ public class ServletAppContext implements WebMvcConfigurer {
     @Value("${db.password}")
     private String db_password;
 
+    private TopMenuService topMenuService;
+
+    @Autowired
+    public void setTopMenuService(TopMenuService topMenuService) {
+        this.topMenuService = topMenuService;
+    }
+
     //-- Controller의 메서드가 반환하는 jsp의 이름 앞뒤에 경로와 확장자를 붙혀주도록 설정한다.
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
@@ -46,6 +56,15 @@ public class ServletAppContext implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
         registry.addResourceHandler("/**").addResourceLocations("/resources/");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        WebMvcConfigurer.super.addInterceptors(registry);
+        TopMenuInterceptor topMenuInterceptor = new TopMenuInterceptor();
+        topMenuInterceptor.setTopMenuService(topMenuService);
+        InterceptorRegistration reg1 = registry.addInterceptor(topMenuInterceptor);
+        reg1.addPathPatterns("/**");
     }
 
     @Bean
@@ -69,6 +88,13 @@ public class ServletAppContext implements WebMvcConfigurer {
     @Bean
     public MapperFactoryBean<BoardMapper> getBoardMapper(SqlSessionFactory sqlSessionFactory)throws Exception{
         MapperFactoryBean<BoardMapper> mapperFactoryBean = new MapperFactoryBean<>(BoardMapper.class);
+        mapperFactoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return mapperFactoryBean;
+    }
+
+    @Bean
+    public MapperFactoryBean<TopMenuMapper> getTopMenuMapper(SqlSessionFactory sqlSessionFactory)throws Exception{
+        MapperFactoryBean<TopMenuMapper> mapperFactoryBean = new MapperFactoryBean<>(TopMenuMapper.class);
         mapperFactoryBean.setSqlSessionFactory(sqlSessionFactory);
         return mapperFactoryBean;
     }
