@@ -1,0 +1,45 @@
+package kr.co.softcampus.controller;
+
+import kr.co.softcampus.beans.DataBean;
+import kr.co.softcampus.database.MapperInterface;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
+
+/**
+ * Created by 김홍준
+ * Date: 2020-12-21
+ * Time: 오후 11:11
+ */
+@Controller
+@Slf4j
+public class TestController {
+
+    @Autowired
+    MapperInterface mapper1;
+
+    @GetMapping("input_data")
+    public String input_data(){
+        return "input_data";
+    }
+
+    @PostMapping("input_pro")
+    public String input_pro(DataBean dataBean){
+        log.info("dataBean : {}", dataBean);
+        mapper1.insert_data(dataBean);
+        return "input_pro";
+    }
+
+    @GetMapping("read_data")
+    public String read_data(Model model){
+        List<DataBean> list = mapper1.select_data();
+        model.addAttribute("list", list);
+        return "read_data";
+    }
+}
