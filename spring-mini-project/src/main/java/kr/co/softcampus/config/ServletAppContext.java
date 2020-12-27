@@ -10,8 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 @ComponentScan("kr.co.softcampus.controller")
-@ComponentScan("kr.co.softcampus.service")
-@ComponentScan("kr.co.softcampus.dao")
 public class ServletAppContext implements WebMvcConfigurer {
 
     //-- Controller의 메서드가 반환하는 jsp의 이름 앞뒤에 경로와 확장자를 붙혀주도록 설정한다.
