@@ -3,6 +3,7 @@ package kr.co.softcampus.mapper;
 import kr.co.softcampus.beans.UserBean;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * Created by 김홍준
@@ -24,4 +25,13 @@ public interface UserMapper {
             "WHERE USER_ID = #{user_id} AND USER_PW = #{user_pw}")
     UserBean getLoginUserInfo(UserBean tempLoginUserBean);
 
+    @Select("SELECT USER_ID, USER_NAME " +
+            "FROM USER_TABLE " +
+            "WHERE USER_IDX = #{user_ix}")
+    UserBean getModifyUserInfo(int user_idx);
+
+    @Update("UPDATE USER_TABLE " +
+            "SET USER_PW = #{user_pw} " +
+            "WHERE USER_IDX = #{user_idx}")
+    void modifyUserInfo(UserBean modifyUserBean);
 }

@@ -28,14 +28,16 @@ public class UserValidator implements Validator {
 
         log.info("UserValidator - beanName : {}", beanName);
 
-        if(beanName.equals("joinUserBean")){
+        if(beanName.equals("joinUserBean") || beanName.equals("modifyUserBean")){
             if(!user_pw.equals(user_pw2)){
                 errors.rejectValue("user_pw", "NotEquals");
                 errors.rejectValue("user_pw2", "NotEquals");
             }
 
-            if(!userBean.isUserIdExist()){
-                errors.rejectValue("user_id", "DontCheckUserIdExist");
+            if(beanName.equals("joinUserBean")){
+                if(!userBean.isUserIdExist()){
+                    errors.rejectValue("user_id", "DontCheckUserIdExist");
+                }
             }
         }
     }
