@@ -3,6 +3,7 @@ package kr.co.softcampus.config;
 import kr.co.softcampus.interceptor.TopMenuInterceptor;
 import kr.co.softcampus.mapper.BoardMapper;
 import kr.co.softcampus.mapper.TopMenuMapper;
+import kr.co.softcampus.mapper.UserMapper;
 import kr.co.softcampus.service.TopMenuService;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -97,6 +98,13 @@ public class ServletAppContext implements WebMvcConfigurer {
     @Bean
     public MapperFactoryBean<TopMenuMapper> getTopMenuMapper(SqlSessionFactory sqlSessionFactory)throws Exception{
         MapperFactoryBean<TopMenuMapper> mapperFactoryBean = new MapperFactoryBean<>(TopMenuMapper.class);
+        mapperFactoryBean.setSqlSessionFactory(sqlSessionFactory);
+        return mapperFactoryBean;
+    }
+
+    @Bean
+    public MapperFactoryBean<UserMapper> getUserMapper(SqlSessionFactory sqlSessionFactory)throws Exception{
+        MapperFactoryBean<UserMapper> mapperFactoryBean = new MapperFactoryBean<>(UserMapper.class);
         mapperFactoryBean.setSqlSessionFactory(sqlSessionFactory);
         return mapperFactoryBean;
     }

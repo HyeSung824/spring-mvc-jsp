@@ -32,4 +32,6 @@ public class UserBean {
     @Size(min = 4, max = 20)
     @Pattern(regexp = "[a-zA-Z0-9]*")
     private String user_pw2;
+
+    private boolean userIdExist = false;
 }
