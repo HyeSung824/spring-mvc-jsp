@@ -1,8 +1,11 @@
 package kr.co.softcampus.controller;
 
 import kr.co.softcampus.beans.UserBean;
+import kr.co.softcampus.service.UserService;
 import kr.co.softcampus.validator.UserValidator;
 import lombok.extern.slf4j.Slf4j;
+import oracle.jdbc.proxy.annotation.Post;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -19,6 +22,13 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 @Slf4j
 public class UserController {
+
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @InitBinder
     public void initBinder(WebDataBinder binder){
@@ -43,6 +53,8 @@ public class UserController {
         if(result.hasErrors()){
             return "user/join";
         }
+
+        userService.addUserInfo(userBean);
 
         return "user/join_success";
     }

@@ -1,5 +1,6 @@
 package kr.co.softcampus.service;
 
+import kr.co.softcampus.beans.UserBean;
 import kr.co.softcampus.dao.UserDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,9 @@ public class UserService {
         }
 
         return false;
+    }
+
+    public void addUserInfo(UserBean joinUserBean){
+        userDao.addUserInfo(joinUserBean);
     }
 }

@@ -1,5 +1,6 @@
 package kr.co.softcampus.dao;
 
+import kr.co.softcampus.beans.UserBean;
 import kr.co.softcampus.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,9 @@ public class UserDao {
 
     public String checkUserIdExist(String user_id){
         return userMapper.checkUserIdExist(user_id);
+    }
+
+    public void addUserInfo(UserBean userBean){
+        userMapper.addUserInfo(userBean);
     }
 }
