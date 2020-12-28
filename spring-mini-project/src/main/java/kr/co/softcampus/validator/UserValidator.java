@@ -1,6 +1,7 @@
 package kr.co.softcampus.validator;
 
 import kr.co.softcampus.beans.UserBean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -9,6 +10,7 @@ import org.springframework.validation.Validator;
  * Date: 2020-12-28
  * Time: 오전 11:37
  */
+@Slf4j
 public class UserValidator implements Validator {
 
     @Override
@@ -22,13 +24,19 @@ public class UserValidator implements Validator {
         String user_pw = userBean.getUser_pw();
         String user_pw2 = userBean.getUser_pw2();
 
-        if(!user_pw.equals(user_pw2)){
-            errors.rejectValue("user_pw", "NotEquals");
-            errors.rejectValue("user_pw2", "NotEquals");
-        }
+        String beanName = errors.getObjectName();
 
-        if(!userBean.isUserIdExist()){
-            errors.rejectValue("user_id", "DontCheckUserIdExist");
+        log.info("UserValidator - beanName : {}", beanName);
+
+        if(beanName.equals("joinUserBean")){
+            if(!user_pw.equals(user_pw2)){
+                errors.rejectValue("user_pw", "NotEquals");
+                errors.rejectValue("user_pw2", "NotEquals");
+            }
+
+            if(!userBean.isUserIdExist()){
+                errors.rejectValue("user_id", "DontCheckUserIdExist");
+            }
         }
     }
 }

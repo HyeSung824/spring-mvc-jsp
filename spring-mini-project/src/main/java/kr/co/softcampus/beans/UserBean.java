@@ -34,4 +34,5 @@ public class UserBean {
     private String user_pw2;
 
     private boolean userIdExist = false;
+    private boolean userLogin = false;
 }
