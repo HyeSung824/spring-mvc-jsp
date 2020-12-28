@@ -1,5 +1,6 @@
 package kr.co.softcampus.config;
 
+import kr.co.softcampus.beans.UserBean;
 import kr.co.softcampus.interceptor.TopMenuInterceptor;
 import kr.co.softcampus.mapper.BoardMapper;
 import kr.co.softcampus.mapper.TopMenuMapper;
@@ -19,6 +20,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.*;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Configuration
@@ -43,6 +45,9 @@ public class ServletAppContext implements WebMvcConfigurer {
 
     private TopMenuService topMenuService;
 
+    @Resource(name = "loginUserBean")
+    private UserBean loginUserBean;
+
     @Autowired
     public void setTopMenuService(TopMenuService topMenuService) {
         this.topMenuService = topMenuService;
@@ -64,8 +69,7 @@ public class ServletAppContext implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         WebMvcConfigurer.super.addInterceptors(registry);
-        TopMenuInterceptor topMenuInterceptor = new TopMenuInterceptor();
-        topMenuInterceptor.setTopMenuService(topMenuService);
+        TopMenuInterceptor topMenuInterceptor = new TopMenuInterceptor(topMenuService, loginUserBean);
         InterceptorRegistration reg1 = registry.addInterceptor(topMenuInterceptor);
         reg1.addPathPatterns("/**");
     }

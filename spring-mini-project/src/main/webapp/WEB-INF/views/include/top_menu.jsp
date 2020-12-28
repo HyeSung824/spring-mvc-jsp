@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   작성자: 김홍준
   작성일: 2020-12-27 오후 9:22
@@ -23,18 +22,24 @@
         </ul>
 
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/user/login" class="nav-link">로그인</a>
-            </li>
-            <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/user/join" class="nav-link">회원가입</a>
-            </li>
-            <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/user/modify" class="nav-link">정보수정</a>
-            </li>
-            <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/user/logout" class="nav-link">로그아웃</a>
-            </li>
+            <c:choose>
+                <c:when test="${loginUserBean.userLogin}">
+                    <li class="nav-item">
+                        <a href="${pageContext.request.contextPath}/user/modify" class="nav-link">정보수정</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="${pageContext.request.contextPath}/user/logout" class="nav-link">로그아웃</a>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li class="nav-item">
+                        <a href="${pageContext.request.contextPath}/user/login" class="nav-link">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="${pageContext.request.contextPath}/user/join" class="nav-link">회원가입</a>
+                    </li>
+                </c:otherwise>
+            </c:choose>
         </ul>
     </div>
 </nav>

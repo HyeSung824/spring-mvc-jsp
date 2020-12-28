@@ -1,6 +1,7 @@
 package kr.co.softcampus.interceptor;
 
 import kr.co.softcampus.beans.BoardInfoBean;
+import kr.co.softcampus.beans.UserBean;
 import kr.co.softcampus.service.TopMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,13 +19,15 @@ import java.util.List;
 public class TopMenuInterceptor implements HandlerInterceptor {
 
     private TopMenuService topMenuService;
+    private UserBean loginUserBean;
 
     /*
-    * Interceptor 빈을 자동 주입받지 못하기 때문에 Interceptor 등록하는 쪽에서 생성자를 통해
-    * 주입해야 함.
-    * */
-    public void setTopMenuService(TopMenuService topMenuService) {
+     * Interceptor 빈을 자동 주입받지 못하기 때문에 Interceptor 등록하는 쪽에서 생성자를 통해
+     * 주입해야 함.
+     * */
+    public TopMenuInterceptor(TopMenuService topMenuService, UserBean loginUserBean) {
         this.topMenuService = topMenuService;
+        this.loginUserBean = loginUserBean;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class TopMenuInterceptor implements HandlerInterceptor {
         log.info("TopMenuInterceptor - preHandle");
         List<BoardInfoBean> topMenuList = topMenuService.getTopMenuList();
         request.setAttribute("topMenuList", topMenuList);
+        request.setAttribute("loginUserBean", loginUserBean);
         return true;
     }
 }
