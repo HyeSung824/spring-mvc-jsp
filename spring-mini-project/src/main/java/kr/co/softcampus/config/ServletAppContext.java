@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.*;
 
 import javax.sql.DataSource;
@@ -23,7 +25,7 @@ import javax.sql.DataSource;
 @ComponentScan("kr.co.softcampus.controller")
 @ComponentScan("kr.co.softcampus.service")
 @ComponentScan("kr.co.softcampus.dao")
-@PropertySource(value = "/WEB-INF/properties/db.properties")
+@PropertySource(value = "/WEB-INF/properties/db.properties", encoding = "UTF-8")
 public class ServletAppContext implements WebMvcConfigurer {
 
     @Value("${db.classname}")
@@ -97,6 +99,21 @@ public class ServletAppContext implements WebMvcConfigurer {
         MapperFactoryBean<TopMenuMapper> mapperFactoryBean = new MapperFactoryBean<>(TopMenuMapper.class);
         mapperFactoryBean.setSqlSessionFactory(sqlSessionFactory);
         return mapperFactoryBean;
+    }
+
+    //-- PropertySource 에 등록된 프로퍼티들을 @Value("${property.name}") 형태로 사용하려면
+    //-- PropertySourcesPlaceholderConfigurer 등록이 필요하다.
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(){
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
+    public ReloadableResourceBundleMessageSource messageSource(){
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setBasenames("/WEB-INF/properties/error_message");
+        return messageSource;
     }
 
 }
