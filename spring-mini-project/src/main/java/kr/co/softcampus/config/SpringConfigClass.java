@@ -4,6 +4,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletRegistration;
 
 //public class SpringConfigClass implements WebApplicationInitializer{
 //
@@ -61,5 +63,20 @@ public class SpringConfigClass extends AbstractAnnotationConfigDispatcherServlet
         CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
         encodingFilter.setEncoding("UTF-8");
         return new Filter[]{encodingFilter};
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        super.customizeRegistration(registration);
+        /*
+        * 매개변수
+        * 1.임시파일 위치(null 일때는 톰캣어서 지정된 임시 파일 위치로 저장됨)
+        * 2.업로드 최대 용량(1024 * 1024 * 50 = 50M)
+        * 3. 파일 데이터를 포함한 사용자가 입력한 데이터 최대 용량(500M)
+        * 4. 업로드하는 파일이 임시로 파일로 저장되지 않고 메모리에서 바로 스트림으로 전달되는 크기의 한계를 나타낸다 - 디폴트 0
+        * 1MB 설정하면 파일이 1MB 이상인 경우만에만 임시 파일로 저장된다
+        * * */
+        MultipartConfigElement config1 = new MultipartConfigElement(null, 52428800, 524288000, 0);
+        registration.setMultipartConfig(config1);
     }
 }

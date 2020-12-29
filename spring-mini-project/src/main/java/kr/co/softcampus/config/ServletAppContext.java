@@ -2,10 +2,12 @@ package kr.co.softcampus.config;
 
 import kr.co.softcampus.beans.UserBean;
 import kr.co.softcampus.interceptor.CheckLoginInterceptor;
+import kr.co.softcampus.interceptor.CheckWriterInterceptor;
 import kr.co.softcampus.interceptor.TopMenuInterceptor;
 import kr.co.softcampus.mapper.BoardMapper;
 import kr.co.softcampus.mapper.TopMenuMapper;
 import kr.co.softcampus.mapper.UserMapper;
+import kr.co.softcampus.service.BoardService;
 import kr.co.softcampus.service.TopMenuService;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -19,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
 
 import javax.annotation.Resource;
@@ -49,6 +52,13 @@ public class ServletAppContext implements WebMvcConfigurer {
     @Resource(name = "loginUserBean")
     private UserBean loginUserBean;
 
+    private BoardService boardService;
+
+    @Autowired
+    public void setBoardService(BoardService boardService) {
+        this.boardService = boardService;
+    }
+
     @Autowired
     public void setTopMenuService(TopMenuService topMenuService) {
         this.topMenuService = topMenuService;
@@ -78,6 +88,10 @@ public class ServletAppContext implements WebMvcConfigurer {
         InterceptorRegistration reg2 = registry.addInterceptor(checkLoginInterceptor);
         reg2.addPathPatterns("/user/modify", "/user/logout", "/board/*");
         reg2.excludePathPatterns("/board/main");
+
+        CheckWriterInterceptor checkWriterInterceptor = new CheckWriterInterceptor(loginUserBean, boardService);
+        InterceptorRegistration reg3 = registry.addInterceptor(checkWriterInterceptor);
+        reg3.addPathPatterns("/board/modify", "/board/delete");
     }
 
     @Bean
@@ -132,6 +146,12 @@ public class ServletAppContext implements WebMvcConfigurer {
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setBasenames("/WEB-INF/properties/error_message");
         return messageSource;
+    }
+
+    //-- 파일 업로드
+    @Bean
+    public StandardServletMultipartResolver multipartResolver(){
+        return new StandardServletMultipartResolver();
     }
 
 }

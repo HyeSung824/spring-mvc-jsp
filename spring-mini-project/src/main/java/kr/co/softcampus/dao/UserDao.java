@@ -1,10 +1,13 @@
 package kr.co.softcampus.dao;
 
+import kr.co.softcampus.beans.ContentBean;
 import kr.co.softcampus.beans.UserBean;
 import kr.co.softcampus.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by 김홍준
